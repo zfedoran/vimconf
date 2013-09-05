@@ -16,4 +16,6 @@ git submodule update
 mkdir ~/.fonts/
 git clone https://github.com/scotu/ubuntu-mono-powerline.git ~/.fonts/ubuntu-mono-powerline 
 
+vim +BundleInstall +qall
+
 cd $CURDR
