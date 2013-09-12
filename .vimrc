@@ -18,7 +18,10 @@ Bundle 'Lokaltog/vim-easymotion'
 Bundle 'mileszs/ack.vim'
 Bundle 'bronson/vim-visual-star-search'
 Bundle 'tpope/vim-surround'
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Bundle 'groenewege/vim-less'
+"Bundle 'daylerees/colour-schemes', { 'rtp': 'vim-themes/' }
+Bundle 'marijnh/tern_for_vim'
+Bundle 'scrooloose/syntastic'
 
 " Brief help
 " :BundleList          - list configured bundles
@@ -48,6 +51,8 @@ let g:molokai_original = 1
 colors monokai
 "colors molokai
 "colors inkpot
+
+"colorscheme Iceberg
 
 " - - - - - - - - - - - - - - - - - - -
 " general setup
@@ -137,12 +142,12 @@ let g:Powerline_symbols = 'fancy'
 " - - - - - - - - - - - - - - - - - - -
 " css & less file support
 " - - - - - - - - - - - - - - - - - - -
-au BufEnter *.css set nocindent
-au BufLeave *.css set cindent
-au BufEnter *.less set nocindent
-au BufLeave *.less set cindent
+"au BufEnter *.css set nocindent
+"au BufLeave *.css set cindent
+"au BufEnter *.less set nocindent
+"au BufLeave *.less set cindent
 
-au BufNewFile,BufRead *.less set filetype=less
+"au BufNewFile,BufRead *.less set syntax=css
 
 " - - - - - - - - - - - - - - - - - - -
 " disable the arrow keys
@@ -244,3 +249,14 @@ endfun
 " pretty print minified JS
 " - - - - - - - - - - - - - - - - - - -
 nnoremap <leader>= :%!js-beautify -j -q -B -f -<CR>
+
+" - - - - - - - - - - - - - - - - - - -
+" setup syntastic
+" - - - - - - - - - - - - - - - - - - -
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '!'
+let g:syntastic_check_on_open=1
+let g:syntastic_quiet_warnings=1
+let g:syntastic_mode_map = { 'mode': 'active',
+                           \ 'active_filetypes': ['javascript'],
+                           \ 'passive_filetypes': [] }
