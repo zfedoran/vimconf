@@ -15,13 +15,21 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'ervandew/supertab'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'Lokaltog/vim-easymotion'
+Bundle 'Lokaltog/vim-distinguished',
+Bundle 'flazz/vim-colorschemes'
 Bundle 'mileszs/ack.vim'
 Bundle 'bronson/vim-visual-star-search'
 Bundle 'tpope/vim-surround'
 Bundle 'groenewege/vim-less'
-"Bundle 'daylerees/colour-schemes', { 'rtp': 'vim-themes/' }
 Bundle 'marijnh/tern_for_vim'
 Bundle 'scrooloose/syntastic'
+Bundle 'Raimondi/delimitMate'
+Bundle 'kshenoy/vim-signature'
+
+" javascript bundles
+Bundle 'jelera/vim-javascript-syntax'
+Bundle 'pangloss/vim-javascript'
+Bundle 'nathanaelkane/vim-indent-guides'
 
 " Brief help
 " :BundleList          - list configured bundles
@@ -47,12 +55,11 @@ if !(has('win32') || has('win64'))
     endif
 endif
 
-let g:molokai_original = 1
-colors monokai
-"colors molokai
-"colors inkpot
 
-"colorscheme Iceberg
+"colors monokai
+"colors molokai
+colors distinguished
+
 
 " - - - - - - - - - - - - - - - - - - -
 " general setup
@@ -117,7 +124,7 @@ let g:ctrlp_prompt_mappings = {
 
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v([\/](node_modules|lib)|[\/]\.(git|hg|svn))$',
-  \ 'file': '\v\.(exe|svg|jpg|jpeg|gif|png|zip|so|o|css)$'
+  \ 'file': '\v\.(exe|svg|jpg|jpeg|gif|png|zip|so|o)$'
   \ }
 
 " - - - - - - - - - - - - - - - - - - -
@@ -152,10 +159,16 @@ let g:Powerline_symbols = 'fancy'
 " - - - - - - - - - - - - - - - - - - -
 " disable the arrow keys
 " - - - - - - - - - - - - - - - - - - -
-nnoremap <Left> :noh<CR>
-nnoremap <Right> :noh<CR>
-nnoremap <Up> :noh<CR>
-nnoremap <Down> :noh<CR>
+"nnoremap <Left> :noh<CR>
+"nnoremap <Right> :noh<CR>
+"nnoremap <Up> :noh<CR>
+"nnoremap <Down> :noh<CR>
+
+" resize current buffer by +/- 5 
+nnoremap <left> :vertical resize -5<cr>
+nnoremap <down> :resize +5<cr>
+nnoremap <up> :resize -5<cr>
+nnoremap <right> :vertical resize +5<cr>
 
 " - - - - - - - - - - - - - - - - - - -
 " use the same symbols as textmate for tabstops and eols
