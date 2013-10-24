@@ -10,21 +10,26 @@ call vundle#rc()
 
 " let Vundle manage Vundle
 Bundle 'gmarik/vundle'
+
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'ervandew/supertab'
-Bundle 'Lokaltog/vim-powerline'
+Bundle 'bling/vim-airline'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'Lokaltog/vim-distinguished',
-Bundle 'flazz/vim-colorschemes'
 Bundle 'mileszs/ack.vim'
 Bundle 'bronson/vim-visual-star-search'
 Bundle 'tpope/vim-surround'
 Bundle 'groenewege/vim-less'
-Bundle 'marijnh/tern_for_vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'Raimondi/delimitMate'
 Bundle 'kshenoy/vim-signature'
+Bundle 'marijnh/tern_for_vim'
+Bundle 'airblade/vim-gitgutter'
+
+" colorschemes
+Bundle 'Lokaltog/vim-distinguished'
+Bundle 'zfedoran/vim-colors-solarized'
+"Bundle 'flazz/vim-colorschemes'
 
 " javascript bundles
 Bundle 'jelera/vim-javascript-syntax'
@@ -55,11 +60,13 @@ if !(has('win32') || has('win64'))
     endif
 endif
 
-
 "colors monokai
 "colors molokai
-colors distinguished
+"colors distinguished
 
+set background=dark
+colorscheme solarized
+" let g:solarized_termcolors=256
 
 " - - - - - - - - - - - - - - - - - - -
 " general setup
@@ -123,7 +130,7 @@ let g:ctrlp_prompt_mappings = {
     \ }
 
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v([\/](node_modules|lib)|[\/]\.(git|hg|svn))$',
+  \ 'dir':  '\v([\/](node_modules|lib|plato_report)|[\/]\.(git|hg|svn))$',
   \ 'file': '\v\.(exe|svg|jpg|jpeg|gif|png|zip|so|o)$'
   \ }
 
@@ -143,8 +150,31 @@ let g:EasyMotion_leader_key = '<Leader>'
 
 " grab the fancy font using this:
 " cd ~/.fonts/ && git clone https://github.com/scotu/ubuntu-mono-powerline.git && cd ~
+"let g:Powerline_symbols = 'fancy'
+
+" https://github.com/bling/vim-airline/wiki/FAQ#vim-airline-doesnt-appear-until-i-create-a-new-split
 set laststatus=2
-let g:Powerline_symbols = 'fancy'
+"let g:airline_theme             = 'powerlineish'
+let g:airline_enable_branch     = 1
+let g:airline_enable_syntastic  = 1
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = '|'
+let g:airline#extensions#tabline#left_alt_sep = '|'
+
+" vim-powerline symbols
+let g:airline_left_sep          = '⮀'
+let g:airline_left_alt_sep      = '⮁'
+let g:airline_right_sep         = '⮂'
+let g:airline_right_alt_sep     = '⮃'
+let g:airline_branch_prefix     = '⭠'
+let g:airline_readonly_symbol   = '⭤'
+let g:airline_linecolumn_prefix = '⭡'
+
+" - - - - - - - - - - - - - - - - - - -
+" glsl file support
+" - - - - - - - - - - - - - - - - - - -
+au BufNewFile,BufRead *.glsl set syntax=c
 
 " - - - - - - - - - - - - - - - - - - -
 " css & less file support
@@ -175,6 +205,7 @@ nnoremap <right> :vertical resize +5<cr>
 " - - - - - - - - - - - - - - - - - - -
 set list
 set listchars=tab:▸\ ,eol:¬
+"set lcs=tab:│┈,trail:·,extends:>,precedes:<,nbsp:&,eol:¬
 
 " - - - - - - - - - - - - - - - - - - -
 " make * and # work on visual mode
@@ -269,7 +300,8 @@ nnoremap <leader>= :%!js-beautify -j -q -B -f -<CR>
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '!'
 let g:syntastic_check_on_open=1
-let g:syntastic_quiet_warnings=1
+let g:syntastic_quiet_warnings=0
+let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'active_filetypes': ['javascript'],
                            \ 'passive_filetypes': [] }
