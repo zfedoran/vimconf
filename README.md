@@ -1,6 +1,8 @@
 vimconf
 =======
-My .vim folder, to get started follow these commands:
+My .vim setup, use the following commands to get started.
+
+<img src="https://github.com/zfedoran/vimconf/raw/master/screenshot.png" alt="" />
 
 `git clone https://github.com/zfedoran/vimconf.git ~/.vim` 
 
