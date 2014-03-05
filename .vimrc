@@ -13,18 +13,27 @@ Bundle 'gmarik/vundle'
 
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/nerdtree'
-Bundle 'ervandew/supertab'
 Bundle 'bling/vim-airline'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'mileszs/ack.vim'
 Bundle 'bronson/vim-visual-star-search'
-Bundle 'tpope/vim-surround'
+"Bundle 'tpope/vim-surround'
 Bundle 'groenewege/vim-less'
 Bundle 'scrooloose/syntastic'
 Bundle 'Raimondi/delimitMate'
 Bundle 'kshenoy/vim-signature'
 Bundle 'marijnh/tern_for_vim'
-Bundle 'airblade/vim-gitgutter'
+Bundle 'tpope/vim-fugitive.git'
+Bundle 'zfedoran/vim-gitgutter'
+Bundle 'godlygeek/tabular'
+
+"SuperTab + SnipMate
+Bundle 'MarcWeber/vim-addon-mw-utils'
+Bundle 'tomtom/tlib_vim'
+Bundle 'garbas/vim-snipmate'
+Bundle 'honza/vim-snippets'
+Bundle 'ervandew/supertab'
+"Bundle 'Valloric/YouCompleteMe'
 
 " colorschemes
 Bundle 'Lokaltog/vim-distinguished'
@@ -36,11 +45,14 @@ Bundle 'jelera/vim-javascript-syntax'
 Bundle 'pangloss/vim-javascript'
 Bundle 'nathanaelkane/vim-indent-guides'
 
+Bundle 'Yggdroot/indentLine'
+
 " Brief help
 " :BundleList          - list configured bundles
 " :BundleInstall(!)    - install(update) bundles
 " :BundleSearch(!) foo - search(or refresh cache first) for foo
 " :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+
 
 filetype plugin indent on
 
@@ -60,12 +72,12 @@ if !(has('win32') || has('win64'))
     endif
 endif
 
-"colors monokai
+colors monokai
 "colors molokai
 "colors distinguished
 
-set background=dark
-colorscheme solarized
+"set background=light
+"colorscheme solarized
 " let g:solarized_termcolors=256
 
 " - - - - - - - - - - - - - - - - - - -
@@ -93,6 +105,8 @@ set autoread
 set colorcolumn=80
 set mouse=a
 set clipboard=unnamed
+set encoding=utf-8
+set updatetime=500 "default: 4000
 
 " brew version of vim needs this
 set bs=indent,eol,start
@@ -105,6 +119,15 @@ vmap <S-TAB> <gv
 map  <C-l> :tabn<CR>
 map  <C-h> :tabp<CR>
 map  <C-n> :tabnew<CR>
+
+" Map the keys jk to ESC
+inoremap jk <ESC>
+
+" Map the leader key to ','
+let mapleader = ","
+
+" Allow the . operator to function in visual mode
+vnoremap . :norm.<CR>
 
 " - - - - - - - - - - - - - - - - - - -
 " nerdtree setup
@@ -130,7 +153,7 @@ let g:ctrlp_prompt_mappings = {
     \ }
 
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v([\/](node_modules|lib|plato_report)|[\/]\.(git|hg|svn))$',
+  \ 'dir':  '\v([\/](node_modules|lib|plato_report|tests|dist)|[\/]\.(git|hg|svn))$',
   \ 'file': '\v\.(exe|svg|jpg|jpeg|gif|png|zip|so|o)$'
   \ }
 
@@ -143,6 +166,32 @@ let g:EasyMotion_do_shade = 0
 
 " typying \\ is too much work, may have to change this back if other plugins conflict
 let g:EasyMotion_leader_key = '<Leader>'
+
+" - - - - - - - - - - - - - - - - - - -
+" tabular setup
+" - - - - - - - - - - - - - - - - - - -
+nmap <leader>a= :Tabularize /=<CR>
+vmap <leader>a= :Tabularize /=<CR>
+nmap <leader>a: :Tabularize /:<CR>
+vmap <leader>a: :Tabularize /:<CR>
+
+" - - - - - - - - - - - - - - - - - - -
+" supertab setup
+" - - - - - - - - - - - - - - - - - - -
+let g:SuperTabDefaultCompletionType = "<c-n>"
+
+" - - - - - - - - - - - - - - - - - - -
+" indentline setup
+" - - - - - - - - - - - - - - - - - - -
+let g:indentLine_color_term = 237
+let g:indentLine_char = '◇'
+let g:indentLine_faster = 1
+
+" - - - - - - - - - - - - - - - - - - -
+" gitgutter setup
+" - - - - - - - - - - - - - - - - - - -
+let g:gitgutter_realtime = 1
+let g:gitgutter_eager = 1
 
 " - - - - - - - - - - - - - - - - - - -
 " powerline setup
@@ -194,17 +243,12 @@ au BufNewFile,BufRead *.glsl set syntax=c
 "nnoremap <Up> :noh<CR>
 "nnoremap <Down> :noh<CR>
 
-" resize current buffer by +/- 5 
-nnoremap <left> :vertical resize -5<cr>
-nnoremap <down> :resize +5<cr>
-nnoremap <up> :resize -5<cr>
-nnoremap <right> :vertical resize +5<cr>
-
 " - - - - - - - - - - - - - - - - - - -
 " use the same symbols as textmate for tabstops and eols
 " - - - - - - - - - - - - - - - - - - -
 set list
 set listchars=tab:▸\ ,eol:¬
+"set lcs=tab:>-,trail:-,space:.,extends:>,precedes:<
 "set lcs=tab:│┈,trail:·,extends:>,precedes:<,nbsp:&,eol:¬
 
 " - - - - - - - - - - - - - - - - - - -
@@ -292,7 +336,7 @@ endfun
 " - - - - - - - - - - - - - - - - - - -
 " pretty print minified JS
 " - - - - - - - - - - - - - - - - - - -
-nnoremap <leader>= :%!js-beautify -j -q -B -f -<CR>
+map <leader>= :%!js-beautify -j -q -B -f -<CR>
 
 " - - - - - - - - - - - - - - - - - - -
 " setup syntastic
@@ -305,3 +349,33 @@ let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'active_filetypes': ['javascript'],
                            \ 'passive_filetypes': [] }
+
+
+" - - - - - - - - - - - - - - - - - - -
+" generate doc comment template
+" - - - - - - - - - - - - - - - - - - -
+map <leader>/ :call GenerateDOCComment()<cr>
+
+function! GenerateDOCComment()
+  let l    = line('.')
+  let i    = indent(l)
+  let pre  = repeat(' ',i)
+  let text = getline(l)
+  let method   = matchstr(text,'\zs[a-zA-Z_0-9]\+\ze\s*:\|function\s*\zs[a-zA-Z_0-9]\+\ze')
+  let params   = matchstr(text,'([^)]*)')
+  let paramPat = '\([$a-zA-Z_0-9]\+\)[, ]*\(.*\)'
+  echomsg params
+  let vars = [pre.' *']
+  let vars += [pre.' *   @method '.method]
+  let m    = ' '
+  let ml = matchlist(params,paramPat)
+  while ml!=[]
+    let [_,var;rest]= ml
+    let vars += [pre.' *   @param '.var]
+    let ml = matchlist(rest,paramPat,0)
+  endwhile
+  let vars += [pre.' *   @returns {undefined}']
+  let comment = [pre.'/**',pre.' *   '] + vars + [pre.' */']
+  call append(l-1,comment)
+  call cursor(l+1,i+5)
+endfunction
