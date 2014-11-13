@@ -26,14 +26,17 @@ Bundle 'marijnh/tern_for_vim'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'zfedoran/vim-gitgutter'
 Bundle 'godlygeek/tabular'
+Bundle 'digitaltoad/vim-jade'
 
 "SuperTab + SnipMate
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
-Bundle 'garbas/vim-snipmate'
+"Bundle 'garbas/vim-snipmate'
+"Bundle 'honza/vim-snippets'
+"Bundle 'ervandew/supertab'
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
-Bundle 'ervandew/supertab'
-"Bundle 'Valloric/YouCompleteMe'
 
 " colorschemes
 Bundle 'Lokaltog/vim-distinguished'
@@ -72,12 +75,12 @@ if !(has('win32') || has('win64'))
     endif
 endif
 
-colors monokai
+"colors monokai
 "colors molokai
 "colors distinguished
 
-"set background=light
-"colorscheme solarized
+set background=light
+colorscheme solarized
 " let g:solarized_termcolors=256
 
 " - - - - - - - - - - - - - - - - - - -
@@ -106,7 +109,7 @@ set colorcolumn=80
 set mouse=a
 set clipboard=unnamed
 set encoding=utf-8
-set updatetime=500 "default: 4000
+set updatetime=1000 "default: 4000
 
 " brew version of vim needs this
 set bs=indent,eol,start
@@ -128,6 +131,54 @@ let mapleader = ","
 
 " Allow the . operator to function in visual mode
 vnoremap . :norm.<CR>
+
+" - - - - - - - - - - - - - - - - - - -
+" YouCompleteMe setup
+" - - - - - - - - - - - - - - - - - - -
+let g:ycm_key_list_select_completion = ['<tab>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<s-tab>', '<Up>']
+let g:ycm_add_preview_to_completeopt=0
+let g:ycm_confirm_extra_conf=0
+set completeopt-=preview
+
+" - - - - - - - - - - - - - - - - - - -
+" UltiSnips setup
+" - - - - - - - - - - - - - - - - - - -
+let g:UltiSnipsExpandTrigger       ="<c-tab>"
+let g:UltiSnipsJumpForwardTrigger  = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+"let g:UltiSnipsSnippetDirectories  = ["snips"]
+
+" Enable tabbing through list of results
+function! g:UltiSnips_Complete()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips#JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
+endfunction
+
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+
+" Expand snippet or return
+let g:ulti_expand_res = 0
+function! Ulti_ExpandOrEnter()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res
+        return ''
+    else
+        return "\<return>"
+endfunction
+
+" Set <space> as primary trigger
+inoremap <return> <C-R>=Ulti_ExpandOrEnter()<CR>
 
 " - - - - - - - - - - - - - - - - - - -
 " nerdtree setup
@@ -153,7 +204,7 @@ let g:ctrlp_prompt_mappings = {
     \ }
 
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v([\/](node_modules|lib|plato_report|tests|dist)|[\/]\.(git|hg|svn))$',
+  \ 'dir':  '\v([\/](node_modules|lib|plato_report|tests|routes|bin|config|camelconfig|egrocerycamelintegration|dist)|[\/]\.(git|hg|svn))$',
   \ 'file': '\v\.(exe|svg|jpg|jpeg|gif|png|zip|so|o)$'
   \ }
 
@@ -190,7 +241,7 @@ let g:indentLine_faster = 1
 " - - - - - - - - - - - - - - - - - - -
 " gitgutter setup
 " - - - - - - - - - - - - - - - - - - -
-let g:gitgutter_realtime = 1
+let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 1
 
 " - - - - - - - - - - - - - - - - - - -
@@ -267,9 +318,9 @@ xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
 " - - - - - - - - - - - - - - - - - - -
 " move lines of text
 " - - - - - - - - - - - - - - - - - - -
-nnoremap <C-j> mz:m+<cr>`z
+"nnoremap <C-j> mz:m+<cr>`z
 nnoremap <C-k> mz:m-2<cr>`z
-vnoremap <C-j> :m'>+<cr>`<my`>mzgv`yo`z
+"vnoremap <C-j> :m'>+<cr>`<my`>mzgv`yo`z
 vnoremap <C-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " - - - - - - - - - - - - - - - - - - -
@@ -365,17 +416,17 @@ function! GenerateDOCComment()
   let params   = matchstr(text,'([^)]*)')
   let paramPat = '\([$a-zA-Z_0-9]\+\)[, ]*\(.*\)'
   echomsg params
-  let vars = [pre.' *']
-  let vars += [pre.' *   @method '.method]
+  let vars = [pre.'*']
+  let vars += [pre.'*   @method '.method]
   let m    = ' '
   let ml = matchlist(params,paramPat)
   while ml!=[]
     let [_,var;rest]= ml
-    let vars += [pre.' *   @param '.var]
+    let vars += [pre.'*   @param {'.var.'}']
     let ml = matchlist(rest,paramPat,0)
   endwhile
-  let vars += [pre.' *   @returns {undefined}']
-  let comment = [pre.'/**',pre.' *   '] + vars + [pre.' */']
+  let vars += [pre.'*   @returns {undefined}']
+  let comment = [pre.'/**',pre.'*   '] + vars + [pre.'*/']
   call append(l-1,comment)
   call cursor(l+1,i+5)
 endfunction
