@@ -204,7 +204,7 @@ let g:ctrlp_prompt_mappings = {
     \ }
 
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v([\/](node_modules|lib|plato_report|tests|routes|bin|config|camelconfig|egrocerycamelintegration|dist)|[\/]\.(git|hg|svn))$',
+  \ 'dir':  '\v([\/](node_modules|lib|plato_report|tests|bin|dist)|[\/]\.(git|hg|svn))$',
   \ 'file': '\v\.(exe|svg|jpg|jpeg|gif|png|zip|so|o)$'
   \ }
 
@@ -319,9 +319,9 @@ xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
 " move lines of text
 " - - - - - - - - - - - - - - - - - - -
 "nnoremap <C-j> mz:m+<cr>`z
-nnoremap <C-k> mz:m-2<cr>`z
+"nnoremap <C-k> mz:m-2<cr>`z
 "vnoremap <C-j> :m'>+<cr>`<my`>mzgv`yo`z
-vnoremap <C-k> :m'<-2<cr>`>my`<mzgv`yo`z
+"vnoremap <C-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " - - - - - - - - - - - - - - - - - - -
 " search and replace in current document
