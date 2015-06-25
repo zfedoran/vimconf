@@ -22,7 +22,7 @@ Bundle 'groenewege/vim-less'
 Bundle 'scrooloose/syntastic'
 Bundle 'Raimondi/delimitMate'
 Bundle 'kshenoy/vim-signature'
-Bundle 'marijnh/tern_for_vim'
+"Bundle 'marijnh/tern_for_vim'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'zfedoran/vim-gitgutter'
 Bundle 'godlygeek/tabular'
@@ -34,7 +34,7 @@ Bundle 'tomtom/tlib_vim'
 "Bundle 'garbas/vim-snipmate'
 "Bundle 'honza/vim-snippets'
 "Bundle 'ervandew/supertab'
-Bundle 'Valloric/YouCompleteMe'
+"Bundle 'Valloric/YouCompleteMe'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 
@@ -79,7 +79,7 @@ endif
 "colors molokai
 "colors distinguished
 
-set background=light
+set background=dark
 colorscheme solarized
 " let g:solarized_termcolors=256
 
@@ -102,8 +102,9 @@ set smartcase
 set incsearch
 set hlsearch
 set nowrap
-set nobackup
-set noswapfile
+set backup
+set backupdir=/private/tmp
+set dir=/private/tmp
 set autoread
 set colorcolumn=80
 set mouse=a
@@ -263,13 +264,7 @@ let g:airline#extensions#tabline#left_sep = '|'
 let g:airline#extensions#tabline#left_alt_sep = '|'
 
 " vim-powerline symbols
-let g:airline_left_sep          = '⮀'
-let g:airline_left_alt_sep      = '⮁'
-let g:airline_right_sep         = '⮂'
-let g:airline_right_alt_sep     = '⮃'
-let g:airline_branch_prefix     = '⭠'
-let g:airline_readonly_symbol   = '⭤'
-let g:airline_linecolumn_prefix = '⭡'
+let g:airline_powerline_fonts = 1
 
 " - - - - - - - - - - - - - - - - - - -
 " glsl file support
@@ -354,7 +349,7 @@ vnoremap <leader>s y :call GrepSearch("v",@")<cr>
 fun! GrepSearch(mode,sub)
 
     " specify which directories to exclude from searches
-    let l:excludeDirs = 'node_modules .git .svn'
+    let l:excludeDirs = 'node_modules .git .svn dist test'
 
     " escape any regex chars with special meaning
     let l:subject = EscapeRegex(a:sub)
@@ -408,25 +403,38 @@ let g:syntastic_mode_map = { 'mode': 'active',
 map <leader>/ :call GenerateDOCComment()<cr>
 
 function! GenerateDOCComment()
-  let l    = line('.')
-  let i    = indent(l)
-  let pre  = repeat(' ',i)
-  let text = getline(l)
-  let method   = matchstr(text,'\zs[a-zA-Z_0-9]\+\ze\s*:\|function\s*\zs[a-zA-Z_0-9]\+\ze')
-  let params   = matchstr(text,'([^)]*)')
-  let paramPat = '\([$a-zA-Z_0-9]\+\)[, ]*\(.*\)'
-  echomsg params
-  let vars = [pre.'*']
-  let vars += [pre.'*   @method '.method]
-  let m    = ' '
-  let ml = matchlist(params,paramPat)
-  while ml!=[]
-    let [_,var;rest]= ml
-    let vars += [pre.'*   @param {'.var.'}']
-    let ml = matchlist(rest,paramPat,0)
-  endwhile
-  let vars += [pre.'*   @returns {undefined}']
-  let comment = [pre.'/**',pre.'*   '] + vars + [pre.'*/']
-  call append(l-1,comment)
-  call cursor(l+1,i+5)
+    let l:jsDocregex = '\s*\([a-zA-Z]*\)\s*[:=]\s*function\s*(\s*\(.*\)\s*).*'
+    let l:jsDocregex2 = '\s*function \([a-zA-Z]*\)\s*(\s*\(.*\)\s*).*'
+ 
+    let l:line = getline('.')
+    let l:indent = indent('.')
+    let l:space = repeat(" ", l:indent)
+ 
+    if l:line =~ l:jsDocregex
+        let l:flag = 1
+        let l:regex = l:jsDocregex
+    elseif l:line =~ l:jsDocregex2
+        let l:flag = 1
+        let l:regex = l:jsDocregex2
+    else
+        let l:flag = 0
+    endif
+ 
+    let l:lines = []
+    let l:desc = input('Description :')
+    call add(l:lines, l:space. '/**')
+    call add(l:lines, l:space . '* ' . l:desc)
+    if l:flag
+        let l:funcName = substitute(l:line, l:regex, '\1', "g")
+        let l:arg = substitute(l:line, l:regex, '\2', "g")
+        let l:args = split(l:arg, '\s*,\s*')
+        for l:arg in l:args
+            call add(l:lines, l:space . '* @param {Object} ' . l:arg)
+        endfor
+        call add(l:lines, l:space . '* @returns {undefined}')
+        call add(l:lines, l:space . '* @memberOf')
+        call add(l:lines, l:space . '* @example')
+    endif
+    call add(l:lines, l:space . '*/')
+    call append(line('.')-1, l:lines)
 endfunction
