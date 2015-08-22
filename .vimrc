@@ -22,7 +22,7 @@ Bundle 'groenewege/vim-less'
 Bundle 'scrooloose/syntastic'
 Bundle 'Raimondi/delimitMate'
 Bundle 'kshenoy/vim-signature'
-"Bundle 'marijnh/tern_for_vim'
+Bundle 'marijnh/tern_for_vim'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'zfedoran/vim-gitgutter'
 Bundle 'godlygeek/tabular'
@@ -34,7 +34,7 @@ Bundle 'tomtom/tlib_vim'
 "Bundle 'garbas/vim-snipmate'
 "Bundle 'honza/vim-snippets'
 "Bundle 'ervandew/supertab'
-"Bundle 'Valloric/YouCompleteMe'
+Bundle 'Valloric/YouCompleteMe'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 
@@ -75,12 +75,12 @@ if !(has('win32') || has('win64'))
     endif
 endif
 
-"colors monokai
+colors monokai
 "colors molokai
 "colors distinguished
 
-set background=dark
-colorscheme solarized
+"set background=dark
+"colorscheme solarized
 " let g:solarized_termcolors=256
 
 " - - - - - - - - - - - - - - - - - - -
@@ -103,12 +103,12 @@ set incsearch
 set hlsearch
 set nowrap
 set backup
-set backupdir=/private/tmp
-set dir=/private/tmp
+set backupdir=~/.tmp/vim/
+set dir=~/.tmp/vim/
 set autoread
 set colorcolumn=80
 set mouse=a
-set clipboard=unnamed
+set clipboard=unnamedplus
 set encoding=utf-8
 set updatetime=1000 "default: 4000
 
@@ -256,15 +256,15 @@ let g:gitgutter_eager = 1
 " https://github.com/bling/vim-airline/wiki/FAQ#vim-airline-doesnt-appear-until-i-create-a-new-split
 set laststatus=2
 "let g:airline_theme             = 'powerlineish'
-let g:airline_enable_branch     = 1
-let g:airline_enable_syntastic  = 1
+"let g:airline_enable_branch     = 1
+"let g:airline_enable_syntastic  = 1
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = '|'
 let g:airline#extensions#tabline#left_alt_sep = '|'
 
 " vim-powerline symbols
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 
 " - - - - - - - - - - - - - - - - - - -
 " glsl file support
@@ -390,7 +390,8 @@ map <leader>= :%!js-beautify -j -q -B -f -<CR>
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '!'
 let g:syntastic_check_on_open=1
-let g:syntastic_quiet_warnings=0
+"let g:syntastic_quiet_warnings=0
+let g:syntastic_quiet_messages = {'level': 'warnings'}
 let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'active_filetypes': ['javascript'],
